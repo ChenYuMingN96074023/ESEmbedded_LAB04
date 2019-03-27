@@ -22,7 +22,7 @@
 #define GPIO_PORTC 2
 #define GPIO_PORTD 3
 
-#define GPIO_BASE(port) (0x40020000 + 0x400 * (port))
+#define GPIO_BASE(port) (0x40020000 + 0x400 * (port)) //開啟gpioD_15 the blue LED
 
 #define GPIOx_MODER_OFFSET 0x00
 #define MODERy_1_BIT(y) ((y)*2 + 1)
