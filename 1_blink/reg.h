@@ -4,7 +4,6 @@
 //REG OPERATIONS
 
 #define UINT32_1 ((uint32_t)1)
-
 #define REG(addr) (*((volatile uint32_t *)(addr)))
 
 #define SET_BIT(addr, bit) (REG(addr) |= UINT32_1 << (bit))
