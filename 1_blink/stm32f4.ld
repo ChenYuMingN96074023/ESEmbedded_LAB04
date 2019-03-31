@@ -11,4 +11,3 @@ SECTIONS
 		*(.text)
 	} > FLASH
 }
-

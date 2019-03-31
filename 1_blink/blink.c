@@ -1,63 +1,79 @@
 #include <stdint.h>
 #include "reg.h"
 
-void led_init(unsigned int LED)
+/**
+ * 
+ * LED init
+ * 
+ */
+void led_init(unsigned int led)
 {
+    SET_BIT(RCC_BASE + RCC_AHB1ENR_OFFSET, GPIO_EN_BIT(GPIO_PORTD));
 
-SET_BIT(RCC_BASE + RCC_AHB1ENR_OFFSET, GPIO_EN_BIT(GPIO_PORTD));
-CLEAR_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_MODER_OFFSET, MODERy_1_BIT(LED));
-SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_MODER_OFFSET, MODERy_0_BIT(LED));
-//OT led pin = 0 => Output push-pull
-CLEAR_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_OTYPER_OFFSET, OTy_BIT(LED));
-//OSPEEDR led pin = 11 => High speed
-SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_OSPEEDR_OFFSET, OSPEEDRy_1_BIT(LED));
-SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_OSPEEDR_OFFSET, OSPEEDRy_0_BIT(LED));
-//PUPDR led pin = 01 => no pull-up,NO pull-down
-SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_PUPDR_OFFSET, PUPDRy_1_BIT(LED));
-SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_PUPDR_OFFSET, PUPDRy_0_BIT(LED));
+	//MODER led pin = 01 => General purpose output mode
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_MODER_OFFSET, MODERy_1_BIT(led));
+	SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_MODER_OFFSET, MODERy_0_BIT(led));
+
+	//OT led pin = 0 => Output push-pull
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_OTYPER_OFFSET, OTy_BIT(led));
+
+	//OSPEEDR led pin = 00 => Low speed
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_OSPEEDR_OFFSET, OSPEEDRy_1_BIT(led));
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_OSPEEDR_OFFSET, OSPEEDRy_0_BIT(led));
+
+	//PUPDR led pin = 00 => No pull-up, pull-down
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_PUPDR_OFFSET, PUPDRy_1_BIT(led));
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_PUPDR_OFFSET, PUPDRy_0_BIT(led));
+
 }
 
+/**
+ * 
+ * blink LED forever
+ * 
+ */
 void blink(unsigned int led)
 {
-    	
+	led_init(led);
 
-		led_init(led);
-		
 	unsigned int i;
+
 	while (1)
 	{
-		//set GPIOD15
-	  SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_BSRR_OFFSET, BSy_BIT(led));
-     
-		for (i = 0; i < 100000; i++);
+		//set GPIOD led pin
+		SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_BSRR_OFFSET, BSy_BIT(led));
 
-		//reset GPIOD15
-	   SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_BSRR_OFFSET, BRy_BIT(led));
-   
-		for (i = 0; i < 100000; i++);
-        
-  
+		for (i = 0; i < 100000; i++)
+			;
+
+		//reset GPIOD led pin
+		SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_BSRR_OFFSET, BRy_BIT(led));
+
+		for (i = 0; i < 100000; i++)
+			;
 	}
 }
-void blink_count (unsigned int led,int count)
+
+/**
+ * 
+ * blink LED x count
+ * 
+ */
+void blink_count(unsigned int led, unsigned int count)
 {
-    unsigned int i;
-    unsigned int j=0;
 	led_init(led);
-	while (j<count)
-	{
+	int j=1;
+	int i=1;
+	while(j<count){
 		//set GPIOD15
-	  SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_BSRR_OFFSET, BSy_BIT(led));
-     
+		SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_BSRR_OFFSET, BSy_BIT(led));
+
 		for (i = 0; i < 100000; i++);
 
 		//reset GPIOD15
-	   SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_BSRR_OFFSET, BRy_BIT(led));
-    
-		for (i = 0; i < 100000; i++);
-         ++j;
-  
-	}
+		SET_BIT(GPIO_BASE(GPIO_PORTD) + GPIOx_BSRR_OFFSET, BRy_BIT(led));
 
-	
+		for (i = 0; i < 100000; i++);
+	    j++;
+	}
 }

@@ -4,6 +4,7 @@
 //REG OPERATIONS
 
 #define UINT32_1 ((uint32_t)1)
+
 #define REG(addr) (*((volatile uint32_t *)(addr)))
 
 #define SET_BIT(addr, bit) (REG(addr) |= UINT32_1 << (bit))
@@ -21,7 +22,7 @@
 #define GPIO_PORTC 2
 #define GPIO_PORTD 3
 
-#define GPIO_BASE(port) (0x40020000 + 0x400 * (port)) //開啟gpioD_15 the blue LED
+#define GPIO_BASE(port) (0x40020000 + 0x400 * (port))
 
 #define GPIOx_MODER_OFFSET 0x00
 #define MODERy_1_BIT(y) ((y)*2 + 1)
